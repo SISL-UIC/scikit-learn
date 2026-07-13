@@ -61,7 +61,7 @@ jobs:
   retrieve-selected-tests:
     name: Retrieve the selected tests
     runs-on: self-hosted
-    if: 'true'
+    if: ${{ !cancelled() && (true) }}
     outputs:
       tests: ${{ steps.selected-tests.outputs.tests }}
     needs:
@@ -93,7 +93,7 @@ jobs:
   unit-tests:
     name: ${{ matrix.name }}
     runs-on: self-hosted
-    if: 'true'
+    if: ${{ !cancelled() && (true) }}
     needs:
     - lint
     - retrieve-commit-message
@@ -259,8 +259,9 @@ jobs:
     - lint
     - retrieve-commit-message
     - retrieve-selected-tests
-    if: contains(needs.retrieve-commit-message.outputs.message, '[free-threaded]')
-      || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    if: ${{ !cancelled() && (contains(needs.retrieve-commit-message.outputs.message,
+      '[free-threaded]') || github.event_name == 'schedule' || github.event_name ==
+      'workflow_dispatch') }}
     env:
       DISTRIB: conda-free-threaded
       LOCK_FILE: build_tools/github/pylatest_free_threaded_linux-64_conda.lock
@@ -276,8 +277,9 @@ jobs:
     - lint
     - retrieve-commit-message
     - retrieve-selected-tests
-    if: contains(needs.retrieve-commit-message.outputs.message, '[scipy-dev]') ||
-      github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    if: ${{ !cancelled() && (contains(needs.retrieve-commit-message.outputs.message,
+      '[scipy-dev]') || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
+      }}
     env:
       DISTRIB: conda-pip-scipy-dev
       LOCK_FILE: build_tools/github/pylatest_pip_scipy_dev_linux-64_conda.lock
@@ -378,10 +380,11 @@ jobs:
           --auto-close false \
           --job-name "$JOB_NAME"
     timeout-minutes: 15
+    if: ${{ !cancelled() }}
   check-job-statuses:
     name: Check all job statuses
     runs-on: self-hosted
-    if: always() && true
+    if: ${{ !cancelled() && (always() && true) }}
     needs:
     - lint
     - unit-tests
