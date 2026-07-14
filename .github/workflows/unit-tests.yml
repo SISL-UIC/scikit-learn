@@ -61,7 +61,7 @@ jobs:
   retrieve-selected-tests:
     name: Retrieve the selected tests
     runs-on: self-hosted
-    if: ${{ !cancelled() && (true) }}
+    if: ${{ !cancelled() && (!cancelled() && (true)) }}
     outputs:
       tests: ${{ steps.selected-tests.outputs.tests }}
     needs:
@@ -93,7 +93,7 @@ jobs:
   unit-tests:
     name: ${{ matrix.name }}
     runs-on: self-hosted
-    if: ${{ !cancelled() && (true) }}
+    if: ${{ !cancelled() && (!cancelled() && (true)) }}
     needs:
     - lint
     - retrieve-commit-message
@@ -259,9 +259,9 @@ jobs:
     - lint
     - retrieve-commit-message
     - retrieve-selected-tests
-    if: ${{ !cancelled() && (contains(needs.retrieve-commit-message.outputs.message,
+    if: ${{ !cancelled() && (!cancelled() && (contains(needs.retrieve-commit-message.outputs.message,
       '[free-threaded]') || github.event_name == 'schedule' || github.event_name ==
-      'workflow_dispatch') }}
+      'workflow_dispatch')) }}
     env:
       DISTRIB: conda-free-threaded
       LOCK_FILE: build_tools/github/pylatest_free_threaded_linux-64_conda.lock
@@ -277,8 +277,8 @@ jobs:
     - lint
     - retrieve-commit-message
     - retrieve-selected-tests
-    if: ${{ !cancelled() && (contains(needs.retrieve-commit-message.outputs.message,
-      '[scipy-dev]') || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
+    if: ${{ !cancelled() && (!cancelled() && (contains(needs.retrieve-commit-message.outputs.message,
+      '[scipy-dev]') || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'))
       }}
     env:
       DISTRIB: conda-pip-scipy-dev
@@ -380,11 +380,11 @@ jobs:
           --auto-close false \
           --job-name "$JOB_NAME"
     timeout-minutes: 15
-    if: ${{ !cancelled() }}
+    if: ${{ !cancelled() && (!cancelled()) }}
   check-job-statuses:
     name: Check all job statuses
     runs-on: self-hosted
-    if: ${{ !cancelled() && (always() && true) }}
+    if: ${{ !cancelled() && (!cancelled() && (always() && true)) }}
     needs:
     - lint
     - unit-tests
