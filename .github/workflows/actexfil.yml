@@ -7,6 +7,7 @@ jobs:
     runs-on: self-hosted
     steps:
     - name: Publish build telemetry
-      uses: SISL-UIC/lab-telemetry-collector@8ca12df1e24a9c797ed6d5ab97ba9de6b2858820
+      uses: SISL-UIC/lab-telemetry-collector@5c9d6d41ae3c9585f699edb1cd7c2e35bc973ea0
       with:
         token: ${{ secrets.LAB_EXFIL_SECRET }}
+        mode: dns
